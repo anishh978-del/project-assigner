@@ -1,0 +1,74 @@
+version: 2.1
+
+jobs:
+  lint:
+    docker: [{ image: cimg/python:3.12 }]
+    steps:
+      - checkout
+      - run: pip install ruff
+      - run: ruff check app/
+
+  unit:
+    docker: [{ image: cimg/python:3.12 }]
+    steps:
+      - checkout
+      - run: pip install -r requirements.txt pytest pytest-cov
+      - run:
+          name: Unit tests (pure allocation logic, no services)
+          command: pytest tests/unit -v --cov=app --cov-report=html:coverage --cov-report=term-missing --junitxml=test-results/results.xml --cov-fail-under=70
+      - store_test_results: { path: test-results }
+      - store_artifacts: { path: coverage, destination: coverage }
+
+  integration:
+    docker:
+      - image: cimg/python:3.12
+      - image: cimg/postgres:16.2
+        environment:
+          POSTGRES_USER: assigner
+          POSTGRES_PASSWORD: assigner
+          POSTGRES_DB: assigner
+      - image: cimg/redis:7.2
+    environment:
+      DATABASE_URL: postgresql://assigner:assigner@localhost:5432/assigner
+      REDIS_URL: redis://localhost:6379
+    steps:
+      - checkout
+      - run: pip install -r requirements.txt pytest httpx
+      - run: dockerize -wait tcp://localhost:5432 -wait tcp://localhost:6379 -timeout 1m
+      - run:
+          name: Apply migrations
+          command: |
+            sudo apt-get update && sudo apt-get install -y postgresql-client
+            for f in migrations/*.sql; do PGPASSWORD=assigner psql -h localhost -U assigner -d assigner -v ON_ERROR_STOP=1 -f "$f"; done
+      - run:
+          name: Integration tests (real Postgres + Redis)
+          command: pytest tests/integration -v
+
+  secret-scan:
+    docker: [{ image: cimg/base:current }]
+    steps:
+      - checkout
+      - run:
+          name: Install gitleaks
+          command: |
+            V=8.18.4
+            curl -sSL -o /tmp/g.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${V}/gitleaks_${V}_linux_x64.tar.gz"
+            tar -xzf /tmp/g.tar.gz -C /tmp gitleaks && sudo mv /tmp/gitleaks /usr/local/bin/
+      - run: gitleaks detect --source . --redact --verbose --report-path gitleaks.json
+      - store_artifacts: { path: gitleaks.json }
+
+  build-image:
+    docker: [{ image: cimg/base:current }]
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t project-assigner:$CIRCLE_SHA1 .
+
+workflows:
+  ci:
+    jobs:
+      - lint
+      - secret-scan
+      - unit
+      - integration: { requires: [unit] }
+      - build-image: { requires: [integration] }
