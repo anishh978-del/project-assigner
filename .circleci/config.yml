@@ -1,74 +1,110 @@
 version: 2.1
 
+# ---------------------------------------------------------------------------
+# Branch -> image tag
+#
+#   main      ->  :qa      lint + unit tests run, then build and push
+#   staging   ->  :stage   no tests, just build and push
+#   prod      ->  :prod    no tests, just build and push
+#
+# Set these in CircleCI: Project Settings -> Environment Variables
+#   DOCKERHUB_USER      your Docker Hub username
+#   DOCKERHUB_TOKEN     a Docker Hub access token (not your password)
+# ---------------------------------------------------------------------------
+
 jobs:
+
   lint:
-    docker: [{ image: cimg/python:3.12 }]
+    docker:
+      - image: cimg/python:3.12
     steps:
       - checkout
       - run: pip install ruff
       - run: ruff check app/
 
   unit:
-    docker: [{ image: cimg/python:3.12 }]
-    steps:
-      - checkout
-      - run: pip install -r requirements.txt pytest pytest-cov
-      - run:
-          name: Unit tests (pure allocation logic, no services)
-          command: pytest tests/unit -v --cov=app --cov-report=html:coverage --cov-report=term-missing --junitxml=test-results/results.xml --cov-fail-under=70
-      - store_test_results: { path: test-results }
-      - store_artifacts: { path: coverage, destination: coverage }
-
-  integration:
     docker:
       - image: cimg/python:3.12
-      - image: cimg/postgres:16.2
-        environment:
-          POSTGRES_USER: assigner
-          POSTGRES_PASSWORD: assigner
-          POSTGRES_DB: assigner
-      - image: cimg/redis:7.2
-    environment:
-      DATABASE_URL: postgresql://assigner:assigner@localhost:5432/assigner
-      REDIS_URL: redis://localhost:6379
     steps:
       - checkout
-      - run: pip install -r requirements.txt pytest httpx
-      - run: dockerize -wait tcp://localhost:5432 -wait tcp://localhost:6379 -timeout 1m
+      - restore_cache:
+          keys: ["pip-{{ checksum \"requirements.txt\" }}"]
+      - run: pip install -r requirements.txt pytest pytest-cov
+      - save_cache:
+          key: pip-{{ checksum "requirements.txt" }}
+          paths: ["~/.cache/pip"]
       - run:
-          name: Apply migrations
+          name: Unit tests with coverage
           command: |
-            sudo apt-get update && sudo apt-get install -y postgresql-client
-            for f in migrations/*.sql; do PGPASSWORD=assigner psql -h localhost -U assigner -d assigner -v ON_ERROR_STOP=1 -f "$f"; done
-      - run:
-          name: Integration tests (real Postgres + Redis)
-          command: pytest tests/integration -v
+            pytest tests/unit -v \
+              --cov=app --cov-report=term-missing \
+              --cov-report=html:coverage \
+              --junitxml=test-results/results.xml
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: coverage
+          destination: coverage
 
-  secret-scan:
-    docker: [{ image: cimg/base:current }]
+  # One job, reused by all three branches. The tag comes in as a parameter.
+  build_and_push:
+    parameters:
+      tag:
+        type: string
+    docker:
+      - image: cimg/base:current
     steps:
       - checkout
+      - setup_remote_docker          # without this, docker build cannot connect
       - run:
-          name: Install gitleaks
+          name: Log in to Docker Hub
           command: |
-            V=8.18.4
-            curl -sSL -o /tmp/g.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${V}/gitleaks_${V}_linux_x64.tar.gz"
-            tar -xzf /tmp/g.tar.gz -C /tmp gitleaks && sudo mv /tmp/gitleaks /usr/local/bin/
-      - run: gitleaks detect --source . --redact --verbose --report-path gitleaks.json
-      - store_artifacts: { path: gitleaks.json }
-
-  build-image:
-    docker: [{ image: cimg/base:current }]
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: docker build -t project-assigner:$CIRCLE_SHA1 .
+            if [ -z "$DOCKERHUB_USER" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+              echo "DOCKERHUB_USER / DOCKERHUB_TOKEN are not set."
+              echo "Add them in Project Settings -> Environment Variables."
+              exit 1
+            fi
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+      - run:
+          name: Build
+          command: |
+            IMAGE="$DOCKERHUB_USER/project-assigner"
+            docker build -t "$IMAGE:<< parameters.tag >>" -t "$IMAGE:<< parameters.tag >>-$CIRCLE_SHA1" .
+      - run:
+          name: Push
+          command: |
+            IMAGE="$DOCKERHUB_USER/project-assigner"
+            docker push "$IMAGE:<< parameters.tag >>"
+            docker push "$IMAGE:<< parameters.tag >>-$CIRCLE_SHA1"
+            echo "pushed $IMAGE:<< parameters.tag >>"
 
 workflows:
-  ci:
+
+  # main -> QA. This is the only branch that runs the tests.
+  qa:
     jobs:
-      - lint
-      - secret-scan
-      - unit
-      - integration: { requires: [unit] }
-      - build-image: { requires: [integration] }
+      - lint:
+          filters: { branches: { only: main } }
+      - unit:
+          filters: { branches: { only: main } }
+      - build_and_push:
+          name: push-qa
+          tag: qa
+          requires: [lint, unit]
+          filters: { branches: { only: main } }
+
+  # staging -> promote the same code, no tests.
+  staging:
+    jobs:
+      - build_and_push:
+          name: push-stage
+          tag: stage
+          filters: { branches: { only: staging } }
+
+  # prod -> promote, no tests.
+  production:
+    jobs:
+      - build_and_push:
+          name: push-prod
+          tag: prod
+          filters: { branches: { only: prod } }

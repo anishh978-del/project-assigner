@@ -1,0 +1,8 @@
+# The /health endpoint catches bare Exception on purpose: it must REPORT that
+# Postgres or Redis is unreachable rather than crash, and the exception type
+# differs between the two drivers.
+line-length = 100
+
+[lint]
+select = ["E", "F", "W"]
+ignore = ["BLE001", "E501"]

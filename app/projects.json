@@ -3,189 +3,20 @@
     "id": 1,
     "title": "URL Shortener with Click Analytics",
     "set": "A",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Paste a long URL, get a short code back. Visiting the short code redirects and records the click. A dashboard shows clicks per day, top referrers and country.",
-    "hard_part": "Two people shortening the same URL at the same moment must not get the same code."
+    "hard_part": "Two people shortening the same URL at the same moment must not get the same code.",
+    "repo": "https://github.com/Shubham46Singh/url-shortener-python"
   },
   {
     "id": 2,
     "title": "Library Lending System",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Students borrow and return books. The system tracks due dates, calculates late fines, caps how many books one person can hold, and blocks borrowing when fines are unpaid.",
-    "hard_part": "The last copy of a book, requested by two students at once. Exactly one should succeed."
-  },
-  {
-    "id": 3,
-    "title": "Event Ticket Booking",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Browse events, pick seats from a map, hold them for 10 minutes while paying, then confirm. Unconfirmed holds expire automatically and the seats go back on sale.",
-    "hard_part": "Expiry must be exact. A seat released one second late is a seat sold twice."
-  },
-  {
-    "id": 4,
-    "title": "API Gateway with Rate Limiting",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "A small service that sits in front of a public API. Clients get an API key with a tier - free, basic, pro - and each tier has a different requests-per-minute allowance. Over the limit returns 429.",
-    "hard_part": "A sliding window is correct but harder than a fixed window. Fixed windows let someone send double the limit across a boundary."
-  },
-  {
-    "id": 5,
-    "title": "Image Processing Queue",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "worker",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Upload an image and get a job ID straight back. A separate worker container resizes it into thumbnails in the background. Polling the job ID shows queued, processing, done or failed.",
-    "hard_part": "A worker that crashes mid-job must not lose the job silently."
-  },
-  {
-    "id": 6,
-    "title": "Game Leaderboard",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Players submit scores. The site shows a global top 100, a per-region board, a weekly board that resets, and tells each player their own rank even if they are 40,000th.",
-    "hard_part": "Ties. Two players on the same score need a stable, defensible order."
-  },
-  {
-    "id": 7,
-    "title": "Expense Splitter",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "A group shares expenses. Anyone adds a bill and says who paid and who shares it, including uneven splits. The app shows who owes whom, reduced to the fewest possible payments.",
-    "hard_part": "Rounding. Three people splitting 100 rupees must still total exactly 100, not 99.99."
-  },
-  {
-    "id": 8,
-    "title": "Timetable and Clash Detection",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Departments enter classes with a teacher, a room, a batch and a time slot. The system refuses to save anything that clashes, and can generate a printable timetable per batch, per teacher and per room.",
-    "hard_part": "Overlap is not equality. 10:00-11:00 and 10:30-11:30 clash, and students usually miss that case."
-  },
-  {
-    "id": 9,
-    "title": "Food Delivery Order Tracker",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Place an order and watch it move through placed, accepted, cooking, out for delivery, delivered. Restaurants update the status; customers see it live. Cancellation is allowed, but only before cooking starts.",
-    "hard_part": "Two restaurant staff updating the same order at the same time must not move it backwards."
-  },
-  {
-    "id": 10,
-    "title": "Parking Lot Management",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Vehicles check in and get a slot suited to their size. On exit the fee is calculated from the duration. The dashboard shows live occupancy by floor and by vehicle type.",
-    "hard_part": "A vehicle parked for 26 hours. Does the daily cap apply once or twice?"
-  },
-  {
-    "id": 11,
-    "title": "Online Quiz Platform",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Teachers create quizzes with a time limit. Students take them, one question at a time, with the timer surviving a page refresh. Scores and a per-question breakdown appear at the end.",
-    "hard_part": "A student who closes the tab and comes back must get their remaining time, not a fresh timer."
-  },
-  {
-    "id": 12,
-    "title": "Inventory and Reorder Alerts",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "worker",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Track stock across several warehouses. When an item drops below its reorder point the system raises an alert, and suggests a quantity based on recent consumption.",
-    "hard_part": "Stock moving between warehouses must not look like consumption."
-  },
-  {
-    "id": 13,
-    "title": "Hostel Room Allocation",
-    "set": "A",
-    "language": "your choice",
-    "starter": false,
-    "services": [
-      "web",
-      "postgres",
-      "redis"
-    ],
-    "summary": "Students submit preferences - room type, floor, and up to two preferred roommates. The system allocates rooms fairly, respecting mutual roommate requests, and shows each student their result.",
-    "hard_part": "A requests B, B requests C. Somebody has to be disappointed, and the rule for who must be defensible."
-  },
-  {
-    "id": 14,
-    "title": "Blood Bank Donor Matching",
     "set": "A",
     "language": "Python (FastAPI)",
     "starter": true,
@@ -194,28 +25,212 @@
       "postgres",
       "redis"
     ],
+    "summary": "Students borrow and return books. The system tracks due dates, calculates late fines, caps how many books one person can hold, and blocks borrowing when fines are unpaid.",
+    "hard_part": "The last copy of a book, requested by two students at once. Exactly one should succeed.",
+    "repo": "https://github.com/Shubham46Singh/library-lending-python"
+  },
+  {
+    "id": 3,
+    "title": "Event Ticket Booking",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Browse events, pick seats from a map, hold them for 10 minutes while paying, then confirm. Unconfirmed holds expire automatically and the seats go back on sale.",
+    "hard_part": "Expiry must be exact. A seat released one second late is a seat sold twice.",
+    "repo": "https://github.com/Shubham46Singh/event-ticket-booking-python"
+  },
+  {
+    "id": 4,
+    "title": "API Gateway with Rate Limiting",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "A small service that sits in front of a public API. Clients get an API key with a tier - free, basic, pro - and each tier has a different requests-per-minute allowance. Over the limit returns 429.",
+    "hard_part": "A sliding window is correct but harder than a fixed window. Fixed windows let someone send double the limit across a boundary.",
+    "repo": "https://github.com/Shubham46Singh/rate-limiter-python"
+  },
+  {
+    "id": 5,
+    "title": "Image Processing Queue",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "worker",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Upload an image and get a job ID straight back. A separate worker container resizes it into thumbnails in the background. Polling the job ID shows queued, processing, done or failed.",
+    "hard_part": "A worker that crashes mid-job must not lose the job silently.",
+    "repo": "https://github.com/Shubham46Singh/image-queue-python"
+  },
+  {
+    "id": 6,
+    "title": "Game Leaderboard",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Players submit scores. The site shows a global top 100, a per-region board, a weekly board that resets, and tells each player their own rank even if they are 40,000th.",
+    "hard_part": "Ties. Two players on the same score need a stable, defensible order.",
+    "repo": "https://github.com/Shubham46Singh/game-leaderboard-python"
+  },
+  {
+    "id": 7,
+    "title": "Expense Splitter",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "A group shares expenses. Anyone adds a bill and says who paid and who shares it, including uneven splits. The app shows who owes whom, reduced to the fewest possible payments.",
+    "hard_part": "Rounding. Three people splitting 100 rupees must still total exactly 100, not 99.99.",
+    "repo": "https://github.com/Shubham46Singh/expense-splitter-python"
+  },
+  {
+    "id": 8,
+    "title": "Timetable and Clash Detection",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Departments enter classes with a teacher, a room, a batch and a time slot. The system refuses to save anything that clashes, and can generate a printable timetable per batch, per teacher and per room.",
+    "hard_part": "Overlap is not equality. 10:00-11:00 and 10:30-11:30 clash, and students usually miss that case.",
+    "repo": "https://github.com/Shubham46Singh/timetable-clash-python"
+  },
+  {
+    "id": 9,
+    "title": "Food Delivery Order Tracker",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Place an order and watch it move through placed, accepted, cooking, out for delivery, delivered. Restaurants update the status; customers see it live. Cancellation is allowed, but only before cooking starts.",
+    "hard_part": "Two restaurant staff updating the same order at the same time must not move it backwards.",
+    "repo": "https://github.com/Shubham46Singh/delivery-tracker-python"
+  },
+  {
+    "id": 10,
+    "title": "Parking Lot Management",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Vehicles check in and get a slot suited to their size. On exit the fee is calculated from the duration. The dashboard shows live occupancy by floor and by vehicle type.",
+    "hard_part": "A vehicle parked for 26 hours. Does the daily cap apply once or twice?",
+    "repo": "https://github.com/Shubham46Singh/parking-lot-python"
+  },
+  {
+    "id": 11,
+    "title": "Online Quiz Platform",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Teachers create quizzes with a time limit. Students take them, one question at a time, with the timer surviving a page refresh. Scores and a per-question breakdown appear at the end.",
+    "hard_part": "A student who closes the tab and comes back must get their remaining time, not a fresh timer.",
+    "repo": "https://github.com/Shubham46Singh/online-quiz-python"
+  },
+  {
+    "id": 12,
+    "title": "Inventory and Reorder Alerts",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "worker",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Track stock across several warehouses. When an item drops below its reorder point the system raises an alert, and suggests a quantity based on recent consumption.",
+    "hard_part": "Stock moving between warehouses must not look like consumption.",
+    "repo": "https://github.com/Shubham46Singh/inventory-alerts-python"
+  },
+  {
+    "id": 13,
+    "title": "Hostel Room Allocation",
+    "set": "A",
+    "language": "Python (FastAPI)",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
+    "summary": "Students submit preferences - room type, floor, and up to two preferred roommates. The system allocates rooms fairly, respecting mutual roommate requests, and shows each student their result.",
+    "hard_part": "A requests B, B requests C. Somebody has to be disappointed, and the rule for who must be defensible.",
+    "repo": "https://github.com/Shubham46Singh/hostel-allocation-python"
+  },
+  {
+    "id": 14,
+    "title": "Blood Bank Donor Matching",
+    "set": "A",
+    "language": "Python",
+    "starter": true,
+    "services": [
+      "web",
+      "postgres",
+      "redis"
+    ],
     "summary": "Hospitals post requests for a blood group and units needed. The system finds compatible donors who are eligible to donate today, ranked by distance, and records each donation.",
-    "hard_part": "Getting the matrix right. Donor-to-recipient is not symmetric, and students reliably invert it."
+    "hard_part": "Getting the matrix right. Donor-to-recipient is not symmetric, and students reliably invert it.",
+    "repo": "https://github.com/Shubham46Singh/blood-bank-python"
   },
   {
     "id": 15,
     "title": "Train Seat Booking with Fare Tiers",
     "set": "A",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Search trains between stations on a date, see live availability by class, and book. Fares rise as the train fills, and cancellation refunds depend on how close to departure it is.",
-    "hard_part": "The waiting list. When a confirmed ticket is cancelled, the first waitlisted passenger must be promoted automatically."
+    "hard_part": "The waiting list. When a confirmed ticket is cancelled, the first waitlisted passenger must be promoted automatically.",
+    "repo": "https://github.com/Shubham46Singh/train-booking-python"
   },
   {
     "id": 16,
     "title": "Habit Tracker with Streaks",
     "set": "B",
-    "language": "Node.js (Express)",
+    "language": "Node.js",
     "starter": true,
     "services": [
       "web",
@@ -223,21 +238,23 @@
       "redis"
     ],
     "summary": "Define habits, tick them off each day, and watch a streak build. Shows a calendar heat map, your longest streak ever, and gives you a limited number of 'freezes' a month so one missed day does not destroy three months of effort.",
-    "hard_part": "Timezones. 'Today' for a user in Bangalore is not today in UTC, and a streak must not break because the server rolled over first."
+    "hard_part": "Timezones. 'Today' for a user in Bangalore is not today in UTC, and a streak must not break because the server rolled over first.",
+    "repo": "https://github.com/Shubham46Singh/habit-tracker-node"
   },
   {
     "id": 17,
     "title": "Flashcards with Spaced Repetition",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Make decks of cards and revise them. The app decides which cards are due today based on how well you remembered each one last time, so easy cards come back rarely and hard ones come back soon.",
-    "hard_part": "A card answered at 11:58pm and again at 12:02am is two sessions by the clock but one by intent."
+    "hard_part": "A card answered at 11:58pm and again at 12:02am is two sessions by the clock but one by intent.",
+    "repo": "https://github.com/Shubham46Singh/flashcards-srs-python"
   },
   {
     "id": 18,
@@ -251,97 +268,104 @@
       "redis"
     ],
     "summary": "A Wordle-style game. One word per day for everybody, six guesses, letters marked green, yellow or grey. Tracks your streak and guess distribution, and shows how you did against everyone else who played today.",
-    "hard_part": "Getting duplicate letters right. Count the letters in the answer, mark greens first, then hand out yellows only while a letter remains unclaimed."
+    "hard_part": "Getting duplicate letters right. Count the letters in the answer, mark greens first, then hand out yellows only while a letter remains unclaimed.",
+    "repo": "https://github.com/Shubham46Singh/word-game-go"
   },
   {
     "id": 19,
     "title": "Campus Confessions Board",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Anonymous posts from students, with voting and comments. Posts are held for moderation if they trip a word filter, and one person cannot flood the board.",
-    "hard_part": "Anonymous but not unaccountable. You must stop abuse without storing anything that identifies who wrote what."
+    "hard_part": "Anonymous but not unaccountable. You must stop abuse without storing anything that identifies who wrote what.",
+    "repo": "https://github.com/Shubham46Singh/confessions-board-python"
   },
   {
     "id": 20,
     "title": "Study Session Leaderboard",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Start a focus timer, pick a subject, and stop when you are done. Weekly and monthly leaderboards for your class, with a per-subject breakdown of where your hours actually went.",
-    "hard_part": "Someone will start a timer and leave for the weekend. Decide what the maximum credible session is and enforce it."
+    "hard_part": "Someone will start a timer and leave for the weekend. Decide what the maximum credible session is and enforce it.",
+    "repo": "https://github.com/Shubham46Singh/study-leaderboard-python"
   },
   {
     "id": 21,
     "title": "Movie Night Decider",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Someone opens a poll, everyone adds films and ranks their choices, and the app runs a proper ranked-choice count rather than just picking the most first-place votes. Shows each elimination round.",
-    "hard_part": "Ties at the bottom. Two films on two votes each - which goes out? Pick a rule and defend it."
+    "hard_part": "Ties at the bottom. Two films on two votes each - which goes out? Pick a rule and defend it.",
+    "repo": "https://github.com/Shubham46Singh/movie-night-python"
   },
   {
     "id": 22,
     "title": "Pantry to Recipe Matcher",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Tell it what you have in your kitchen. It shows what you can cook right now, what you could cook if you bought one more thing, and builds a shopping list for a recipe you choose.",
-    "hard_part": "Units. 2 cups of flour and 250g of flour are the same ingredient and students will treat them as two."
+    "hard_part": "Units. 2 cups of flour and 250g of flour are the same ingredient and students will treat them as two.",
+    "repo": "https://github.com/Shubham46Singh/pantry-matcher-python"
   },
   {
     "id": 23,
     "title": "Gym Progress Tracker",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Log your sets, reps and weights. The app tracks personal bests per exercise, estimates your one-rep max, charts progress over months and warns when you have stalled on a lift.",
-    "hard_part": "Is 100kg for 5 reps better than 110kg for 3? Your formula has to decide, and be consistent about it."
+    "hard_part": "Is 100kg for 5 reps better than 110kg for 3? Your formula has to decide, and be consistent about it.",
+    "repo": "https://github.com/Shubham46Singh/gym-tracker-python"
   },
   {
     "id": 24,
     "title": "Link Board with Hot Ranking",
     "set": "B",
-    "language": "your choice",
-    "starter": false,
+    "language": "Python (FastAPI)",
+    "starter": true,
     "services": [
       "web",
       "postgres",
       "redis"
     ],
     "summary": "Post links, vote on them, comment in threads. The front page is not just 'most votes' - it uses a ranking that decays with age, so new things can reach the top and yesterday's winner slides off.",
-    "hard_part": "Comment threads. Storing and returning a nested tree from a flat table, in one query, without recursion in Python."
+    "hard_part": "Comment threads. Storing and returning a nested tree from a flat table, in one query, without recursion in Python.",
+    "repo": "https://github.com/Shubham46Singh/link-board-python"
   },
   {
     "id": 25,
     "title": "Ladder with ELO Ratings",
     "set": "B",
-    "language": "Java (Spring Boot)",
+    "language": "Java",
     "starter": true,
     "services": [
       "web",
@@ -349,6 +373,7 @@
       "redis"
     ],
     "summary": "A ladder for chess, table tennis or any one-on-one game. Report a result, both ratings adjust, and the ladder re-orders. New players are provisional until they have played enough games.",
-    "hard_part": "A new player beating a top player should move a lot; a top player beating a new one should barely move. That asymmetry is the K-factor, and getting it wrong makes the ladder gameable."
+    "hard_part": "A new player beating a top player should move a lot; a top player beating a new one should barely move. That asymmetry is the K-factor, and getting it wrong makes the ladder gameable.",
+    "repo": "https://github.com/Shubham46Singh/elo-ladder-java"
   }
 ]

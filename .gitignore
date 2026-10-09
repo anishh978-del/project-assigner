@@ -1,8 +1,9 @@
-# Never commit real student data. Rosters and generated assignments stay local.
+# NEVER commit real student data.
+# Rosters and generated assignments stay on your machine.
 out/
+data/students.csv
 *.xlsx
 *.csv
-!data/*.csv
 
 __pycache__/
 *.pyc
